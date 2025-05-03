@@ -17,7 +17,7 @@ jobs:
 
       - uses: ./
         with:
-          model: qwen:0.5b
+          model: qwen:0.5b qwen3:0.6b
           cache-key: v2
 
       - run: ollama list

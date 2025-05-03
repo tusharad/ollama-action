@@ -18,3 +18,11 @@ We can then run tests and connect to `http://localhost:11434` to make requests t
 
 This action is used by [`pydantic-ai`](https://github.com/pydantic/pydantic-ai).
 
+You can also pull multiple models by specifying space separated models names:
+
+```yaml
+      - uses: pydantic/ollama-action@v3
+        with:
+          model: qwen2:0.5b llama3.2
+```
+

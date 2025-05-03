@@ -7,7 +7,7 @@ branding:
 
 inputs:
   model:
-    description: The model to run
+    description: The models to run space-separated (e.g. 'llama3.2 qwen3:4b')
     required: true
   cache-key:
     description: The cache key to use
@@ -27,7 +27,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.ollama
-        key: ollama-models-${{ inputs.cache-key }}-${{ inputs.model }}
+        key: ollama-models-${{ inputs.cache-key }}
 
     - if: steps.cache-ollama-install.outputs.cache-hit != 'true'
       run: '${GITHUB_ACTION_PATH}/install-ollama.sh'
@@ -42,6 +42,13 @@ runs:
     - run: ollama --version
       shell: bash
 
-    - if: steps.cache-ollama-models.outputs.cache-hit != 'true'
-      run: ollama pull ${{ inputs.model }}
+    - run: |
+        for model in ${{ inputs.model }}; do
+          if ! ollama list | grep -q "$model"; then
+            echo "Pulling missing model: $model"
+            ollama pull "$model"
+          else
+            echo "Model already exists: $model"
+          fi
+        done
       shell: bash
